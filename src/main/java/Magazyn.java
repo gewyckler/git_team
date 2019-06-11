@@ -13,5 +13,5 @@ import java.util.Map;
 
 public class Magazyn {
     private Map <String, Integer> listaProduktowWMagazynie = new HashMap<>();
-    private Map <String,List <Produkt>> mapaZamowien  = new HashMap<>();
+    private Map <String,List <Zamowienie>> mapaZamowien  = new HashMap<>();
 }
