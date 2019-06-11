@@ -1,7 +1,17 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Magazyn {
-    private List<Produkt> listaProduktow = new ArrayList<>();
-    private List<Zamowienie> listaZamowien = new ArrayList<>();
+    private Map <String, Integer> listaProduktowWMagazynie = new HashMap<>();
+    private Map <String,List <Produkt>> mapaZamowien  = new HashMap<>();
 }
