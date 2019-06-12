@@ -11,7 +11,12 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 
+
 public class Magazyn {
     private Map <String, Integer> listaProduktowWMagazynie = new HashMap<>();
     private Map <String,List <Zamowienie>> mapaZamowien  = new HashMap<>();
+
+
+
+
 }

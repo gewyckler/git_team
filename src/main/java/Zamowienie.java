@@ -21,3 +21,4 @@ public class Zamowienie {
     private String dataDostarczenia;
     private Long numerFaktury;
 }
+
