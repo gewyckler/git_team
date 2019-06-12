@@ -17,7 +17,8 @@ public class Zamowienie {
     //    private List <Produkt> listaProduktowZamawiana = new ArrayList<Produkt>();
     private String dataZamowienie;
     private String numer;
-    private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
     private String dataDostarczenia;
     private Long numerFaktury;
+    private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
+
 }

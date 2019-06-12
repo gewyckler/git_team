@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 
 public class Produkt {
     private String nazwa;
@@ -12,6 +11,15 @@ public class Produkt {
     private int ilosc;
     private boolean czyDostarczono;
 
+    public Produkt(String nazwa, double cena, int ilosc) {
+        this.nazwa = nazwa;
+        this.cena = cena;
+        this.ilosc = ilosc;
+    }
+
+    public boolean dostarczono (boolean czyDostarczono) {
+        return this.czyDostarczono = czyDostarczono;
+    }
 
     @Override
     public String toString() {
