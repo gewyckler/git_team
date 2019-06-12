@@ -26,8 +26,6 @@ public class Produkt {
         return "Produkt{" +
                 "nazwa='" + nazwa + '\'' +
                 ", cena=" + cena +
-                ", ilosc=" + ilosc +
-                ", czyDostarczono=" + czyDostarczono +
-                '}';
+                ", ilosc=" + ilosc;
     }
 }
