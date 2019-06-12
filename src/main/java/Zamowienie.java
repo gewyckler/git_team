@@ -15,9 +15,9 @@ import java.util.logging.Handler;
 
 public class Zamowienie {
     //    private List <Produkt> listaProduktowZamawiana = new ArrayList<Produkt>();
-    private String dataZamowienie;
+    private LocalDateTime dataZamowienie;
+    private LocalDateTime dataDostarczenia;
     private String numer;
-    private String dataDostarczenia;
     private Long numerFaktury;
     private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
 

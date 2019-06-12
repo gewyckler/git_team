@@ -34,15 +34,17 @@ public class Main {
             for (Zamowienie zamowienie : magazynSklepu.getMapaZamowien().get(nrDostawy)) {
                 int liczbaProduktow = 0;
                 Produkt produkt = (Produkt) zamowienie.getListaProduktowZamawiana().values();
-                System.out.println("Zamowienie zawiera " + zamowienie.getListaProduktowZamawiana().size());
+                System.out.println("Zamówienie zawiera " + zamowienie.getListaProduktowZamawiana().size());
                 System.out.println("Czy w dostawie znajduje się produkt: " + zamowienie.getListaProduktowZamawiana().values());
                 takNie = scanner.next();
                 if (takNie.equalsIgnoreCase("tak")) {
-                    magazynSklepu.getListaProduktowWMagazynie().put(String.valueOf(zamowienie.getListaProduktowZamawiana().keySet()), liczbaProduktow++);
+                    magazynSklepu.getListaProduktowWMagazynie().put(String.valueOf(zamowienie.getListaProduktowZamawiana().keySet()), produkt.getIlosc());
                 } else if (takNie.equalsIgnoreCase("nie")) {
                     zamowienie.getListaProduktowZamawiana().get(produkt).dostarczono(false);
                 }
             }
+            System.out.println("Zamowienie zrealizowane. Podaj numer faktury: ");
+            Long nrFaktury = scanner.nextLong();
 
             System.out.println("Czy chcesz ustawić datę dostawy ręcznie? tak/nie");
             String czyTak = scanner.next();
@@ -54,6 +56,7 @@ public class Main {
                 System.out.println("Podaj datę według wzoru -> HH:mm dd-MM-yyyy");
                 dataDostawy = scanner.nextLine();
                 LocalDateTime czasOdUzytkownika = LocalDateTime.parse(dataDostawy, formaterDaty);
+
 
                 //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
 
