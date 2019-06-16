@@ -82,13 +82,8 @@ public class Main {
                 dataIGodzinaDostawy = godzinaDostawy + " " + dataDostawy;
                 LocalDateTime czasOdUzytkownika = LocalDateTime.parse(dataIGodzinaDostawy, formaterDaty);
 
-//                System.out.println("Format daty zloczonej " + czasOdUzytkownika);
-
-                Duration duration = Duration.between(czasOdUzytkownika, zamowienie.getDataZamowienie());
+                Duration duration = Duration.between(zamowienie.getDataZamowienie(), czasOdUzytkownika);
                 DateTimeFormatter formatGodziny = DateTimeFormatter.ofPattern("HH:mm");
-//                System.out.println("To string " + duration.toString());
-//                System.out.println("Get seconds " + duration.getSeconds());
-//                System.out.println("Ans " + duration.abs());
                 System.out.println(duration.getSeconds());
 
                 if (duration.getSeconds() > 60L) {
@@ -104,8 +99,21 @@ public class Main {
 
             } else {                                                                //JESLI NIE TO DATA GENERUJE SIE AUTOMATYCZNIE
 
-                LocalDateTime localDateTime = LocalDateTime.now();
-                localDateTime.format(formaterDaty);
+                LocalDateTime dataAuto = LocalDateTime.now();
+                dataAuto.format(formaterDaty);
+
+                Duration duration = Duration.between(zamowienie.getDataZamowienie(), dataAuto);
+                System.out.println(duration.getSeconds());
+
+                if (duration.getSeconds() > 60L || duration.getSeconds() < -60) {
+
+                    long roznica = duration.getSeconds() - 60;
+                    System.out.println("Zamowienie spoznilo sie o " + roznica);
+
+                } else {
+
+                    System.out.println("Zamowienie dostarczono na czas (czyli w ciagu 1 min).");
+                }
                 //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
 
             }
