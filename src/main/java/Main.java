@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static String main(String[] args) {
 
+
         // Produkt zamawiany = new Zamowienie();
         // Produkt chleb = Produkt("Chleb", 2.25, 8);
 
@@ -33,32 +34,38 @@ public class Main {
 
             Map<String, Produkt> zamowienie = new HashMap();
             zamowienie.put(nazwaProd, produktZeskanera);
-           // System.out.println(zamowienie);  - dodaje informaje jaka opcje wybralem
-
-            System.out.println(zamowienie.values());
-
-        }
-
-        public static String nrZamowienia (int dlugoscKoduZamowienia){
-            char[] generator = new char[7];
-            for (int i = 0; i < dlugoscKoduZamowienia; i++) {
-                generator[i] = (char) (((int.Math.random()* 16))+ (int)'A');
-                return (new String(generator, 0, dlugoscKoduZamowienia));
-
-            }
-            System.out.println(nrZamowienia);
-            
-            
-
-        }
+            // System.out.println(zamowienie);  - dodaje informaje jaka opcje wybralem
 
 
-        // nr zamowienia
+
+        }return nrZamowienia(6);
+
 
     }
 
 
+
+    public static String nrZamowienia ( int dlugoscKoduZamowienia)
+    {
+        char[] generator = new char[7];
+        for (int i = 0; i < dlugoscKoduZamowienia; i++) {
+
+            generator[i] = (char) (((int) (Math.random() * 16)) + (int) 'A');
+        }
+
+        return (new String(generator, 0, dlugoscKoduZamowienia));
+
+    }
+
+
+
+
+
+
 }
+
+
+
 
 
 
