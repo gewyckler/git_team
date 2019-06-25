@@ -6,19 +6,20 @@ public class Main {
     public static String main(String[] args) {
 
 
+
         // Produkt zamawiany = new Zamowienie();
         // Produkt chleb = Produkt("Chleb", 2.25, 8);
 
 
         System.out.println("Podaj liczbe zamówień");
-        Scanner scanner2 = new Scanner(System.in);
-        int iloscProduktowNaZamowieniu = scanner2.nextInt();
+        Scanner scanner3 = new Scanner(System.in);
+        int iloscProduktowNaZamowieniu = scanner3.nextInt();
 
 
         for (int i = 0; i < iloscProduktowNaZamowieniu; i++) {
 
             System.out.println("podaj nazwe produktu");
-            Scanner scanner3 = new Scanner(System.in);
+            //Scanner scanner3 = new Scanner(System.in);
             String nazwaProd = scanner3.next();
 
             System.out.println("podaj cene produktu");
@@ -44,10 +45,11 @@ public class Main {
     }
 
 
+//generatol znakow losowych
 
     public static String nrZamowienia ( int dlugoscKoduZamowienia)
     {
-        char[] generator = new char[7];
+        char[] generator = new char[6];
         for (int i = 0; i < dlugoscKoduZamowienia; i++) {
 
             generator[i] = (char) (((int) (Math.random() * 16)) + (int) 'A');
@@ -56,6 +58,8 @@ public class Main {
         return (new String(generator, 0, dlugoscKoduZamowienia));
 
     }
+
+
 
 
 
