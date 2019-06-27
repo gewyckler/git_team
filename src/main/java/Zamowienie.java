@@ -15,6 +15,7 @@ import java.util.logging.Handler;
 
 public class Zamowienie {
     //    private List <Produkt> listaProduktowZamawiana = new ArrayList<Produkt>();
+
     private LocalDateTime dataZamowienie;
     private LocalDateTime dataDostarczenia;
     private String numer;

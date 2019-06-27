@@ -6,9 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Formatter;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,18 +39,26 @@ public class Main {
         magazynSklepu.getMapaZamowien().put("GD123", zamowienieTest2);
         System.out.println("Nr dostawy (np:XY123): ");
         String nrDostawy = scanner.next();
-        dodajDostawe(nrDostawy, magazynSklepu, zamowienieTest);
+        if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy)) {
+
+            Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get(nrDostawy);
+            dodajDostawe(nrDostawy, magazynSklepu);
+
+        }
     }
 
-    public static void dodajDostawe(String nrDostawy, Magazyn magazynSklepu, Zamowienie zamowienie) {
+    public static void dodajDostawe(String nrDostawy, Magazyn magazynSklepu) {
 
         Scanner scanner = new Scanner(System.in);
 
         String takNie;
 
-        if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy)) { //SPRAWDZENIE CZY ZAMOWIENIE OD PODANYM NUMERZEZ  PARAMETRU ISTNIEJE
+        Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get("FV 123");
 
-            System.out.println(magazynSklepu.getMapaZamowien().values());
+        for (Produkt p : zamowienie.getListaProduktowZamawiana().values()) {
+            System.out.println("czy masz : " + p.getNazwa() + " w ilosci : " + p.getIlosc());
+        }
+
 //            for (Zamowienie zamowienieObecne : magazynSklepu.getMapaZamowien().values()){ //JESLI ISTNIEJE TO WYPISZ ZAWARTOSC
 //
 //                Produkt produkt = zamowienieObecne.getListaProduktowZamawiana().values();
@@ -63,70 +73,71 @@ public class Main {
 //                    zamowienieObecne.getListaProduktowZamawiana().get(produkt).dostarczono(false);
 //                }
 
-            System.out.println("Zamowienie zrealizowane. Podaj numer faktury: ");   //DODANIE NR FAKTURY DO ZAMOWNIE
-            Long nrFaktury = scanner.nextLong();
-            zamowienie.setNumerFaktury(nrFaktury);
+        System.out.println("Zamowienie zrealizowane. Podaj numer faktury: ");   //DODANIE NR FAKTURY DO ZAMOWNIE
 
-            System.out.println("Czy chcesz ustawić datę dostawy ręcznie? tak/nie"); //CZY CHCESZ WPISAC DATE ZAMOWIENIA RECZNIE
-            String czyTak = scanner.next();
-            String dataDostawy;
-            String godzinaDostawy;
-            String dataIGodzinaDostawy;
-            DateTimeFormatter formaterDaty = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
+        System.out.println("Czy chcesz ustawić datę dostawy ręcznie? tak/nie"); //CZY CHCESZ WPISAC DATE ZAMOWIENIA RECZNIE
+        String czyTak = scanner.next();
+        String dataDostawy;
+        String godzinaDostawy;
+        String dataIGodzinaDostawy;
+        DateTimeFormatter formaterDaty = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
 
-            if (czyTak.equalsIgnoreCase("tak")) {                       //JESLI TAK TO WPISUJE W PODANYM FORMACIE
-                System.out.println("Podaj godzine dostawy wedlug wzoru -> HH:mm");
-                godzinaDostawy = scanner.next();
-                System.out.println("Podaj datę według wzoru -> dd-MM-yyyy");
-                dataDostawy = scanner.next();
-                dataIGodzinaDostawy = godzinaDostawy + " " + dataDostawy;
-                LocalDateTime czasOdUzytkownika = LocalDateTime.parse(dataIGodzinaDostawy, formaterDaty);
 
-                Duration duration = Duration.between(zamowienie.getDataZamowienie(), czasOdUzytkownika);
-                DateTimeFormatter formatGodziny = DateTimeFormatter.ofPattern("HH:mm");
-                System.out.println(duration.getSeconds());
+        if (czyTak.equalsIgnoreCase("tak")) {                       //JESLI TAK TO WPISUJE W PODANYM FORMACIE
+            System.out.println("Podaj godzine dostawy wedlug wzoru -> HH:mm");
+            godzinaDostawy = scanner.next();
+            System.out.println("Podaj datę według wzoru -> dd-MM-yyyy");
+            dataDostawy = scanner.next();
+            dataIGodzinaDostawy = godzinaDostawy + " " + dataDostawy;
+            LocalDateTime czasOdUzytkownika = LocalDateTime.parse(dataIGodzinaDostawy, formaterDaty);
 
-                if (duration.getSeconds() > 60L) {
+            Duration duration = Duration.between(zamowienie.getDataZamowienie(), czasOdUzytkownika);
+            DateTimeFormatter formatGodziny = DateTimeFormatter.ofPattern("HH:mm");
+            System.out.println(duration.getSeconds());
 
-                    long roznica = duration.getSeconds() - 60;
-                    System.out.println("Zamowienie spoznilo sie o " + roznica);
+            if (duration.getSeconds() > 60L) {
 
-                } else {
+                long roznica = duration.getSeconds() - 60;
+                System.out.println("Zamowienie spoznilo sie o " + roznica);
 
-                    System.out.println("Zamowienie dostarczono na czas (czyli w ciagu 1 min).");
-                }
-                //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
+            } else {
 
-            } else {                                                                //JESLI NIE TO DATA GENERUJE SIE AUTOMATYCZNIE
-
-                LocalDateTime dataAuto = LocalDateTime.now();
-                dataAuto.format(formaterDaty);
-
-                Duration duration = Duration.between(zamowienie.getDataZamowienie(), dataAuto);
-                System.out.println(duration.getSeconds());
-
-                if (duration.getSeconds() > 60L || duration.getSeconds() < -60) {
-
-                    long roznica = duration.getSeconds() - 60;
-                    System.out.println("Zamowienie spoznilo sie o " + roznica);
-
-                } else {
-
-                    System.out.println("Zamowienie dostarczono na czas (czyli w ciagu 1 min).");
-                }
-                //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
-
+                System.out.println("Zamowienie dostarczono na czas (czyli w ciagu 1 min).");
             }
-        } else if (!magazynSklepu.getMapaZamowien().
+            //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
 
-                containsKey(nrDostawy)) {
-            System.out.println("Zamowienie o podanym numerze nie istnieje.");
+        } else {                                                                //JESLI NIE TO DATA GENERUJE SIE AUTOMATYCZNIE
 
-        } else if (magazynSklepu.getMapaZamowien().
+            LocalDateTime dataAuto = LocalDateTime.now();
+            dataAuto.format(formaterDaty);
 
-                isEmpty()) {
-            System.out.println("Lista zamówień jest pusta.");
+            Duration duration = Duration.between(zamowienie.getDataZamowienie(), dataAuto);
+            System.out.println(duration.getSeconds());
+
+            if (duration.getSeconds() > 60L || duration.getSeconds() < -60) {
+
+                long roznica = duration.getSeconds() - 60;
+                System.out.println("Zamowienie spoznilo sie o " + roznica);
+
+            } else {
+
+                System.out.println("Zamowienie dostarczono na czas (czyli w ciagu 1 min).");
+            }
+            //odjac od daty zamowienia. Jesli powyzej 1 min to spoznione, jesli ponizej to zmiescilo sie w czasie.
+
         }
+//    } else if(!magazynSklepu.getMapaZamowien().containsKey(nrDostawy))
+//
+//    {
+//        System.out.println("Zamowienie o podanym numerze nie istnieje.");
+//
+//    } else if(magazynSklepu.getMapaZamowien().
+//
+//    isEmpty())
 
+    {
+        System.out.println("Lista zamówień jest pusta.");
     }
+
+}
 }
