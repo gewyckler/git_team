@@ -14,7 +14,6 @@ import java.util.logging.Handler;
 @NoArgsConstructor
 
 public class Zamowienie {
-    //    private List <Produkt> listaProduktowZamawiana = new ArrayList<Produkt>();
 
     private LocalDateTime dataZamowienie;
     private LocalDateTime dataDostarczenia;

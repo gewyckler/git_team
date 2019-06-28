@@ -17,8 +17,8 @@ public class Produkt {
         this.ilosc = ilosc;
     }
 
-    public boolean dostarczono (boolean czyDostarczono) {
-        return this.czyDostarczono = czyDostarczono;
+    public boolean dostarczono (boolean dostarczono) {
+        return this.czyDostarczono = dostarczono;
     }
 
     @Override
