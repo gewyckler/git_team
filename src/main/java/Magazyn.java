@@ -17,20 +17,26 @@ public class Magazyn {
 
     public void zwiekszLiczbeWMagazynie(Produkt produkt) {
 
-        for (String liczbaWMagazynie : listaProduktowWMagazynie.keySet()) {
-            if  (produkt.isCzyDostarczono() == true) {
-                if (listaProduktowWMagazynie.containsKey(produkt.getNazwa())) { //jesli zawiera to powinno zwiekszyc liczbe w magazynie.
-                    listaProduktowWMagazynie.values().add(produkt.getIlosc());
-                } else {
-                    listaProduktowWMagazynie.put(produkt.getNazwa(), produkt.getIlosc()); //jesli nie zawiera to powinno dodac produkt do magazynu i wpisac ile jest tego produktu
-                    //w magazynie.
-                }
-            } else {
-                System.out.println("Nie dostarczono produktu.");
+        if (produkt.isCzyDostarczono() == true) {
+
+            //jesli mapa nie zawiera klucza o podanej nazwie to nalezy dodac go do mapy wraz z jego zamawiana iloscia.
+            if (!listaProduktowWMagazynie.containsKey(produkt.getNazwa())) {
+
+                listaProduktowWMagazynie.put(produkt.getNazwa(), produkt.getIlosc());
+            } else if (listaProduktowWMagazynie.containsKey(produkt.getNazwa())) {
+                //jesli produnkt o podanej nazwie znajduje sie w juz w magazynie to nalezy do jego obecnej ilosci dodac ta z podanego produktu.
+
+                int liczbaProduktow = listaProduktowWMagazynie.get(listaProduktowWMagazynie.values()) + produkt.getIlosc();
+
+                listaProduktowWMagazynie.put(produkt.getNazwa(),liczbaProduktow);
+//                    listaProduktowWMagazynie.entrySet().stream()
+//                            .filter(p -> p.getKey().equalsIgnoreCase(produkt.getNazwa()))
+//                            .forEach(pr -> {
+//                                pr.setValue(pr.getValue() + produkt.getIlosc());
+//                            });
             }
-
-
         }
+
 
     }
 }

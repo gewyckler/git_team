@@ -16,16 +16,4 @@ public class Produkt {
         this.cena = cena;
         this.ilosc = ilosc;
     }
-
-    public boolean dostarczono (boolean dostarczono) {
-        return this.czyDostarczono = dostarczono;
-    }
-
-    @Override
-    public String toString() {
-        return "Produkt{" +
-                "nazwa='" + nazwa + '\'' +
-                ", cena=" + cena +
-                ", ilosc=" + ilosc;
-    }
 }
