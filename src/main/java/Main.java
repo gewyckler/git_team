@@ -1,8 +1,11 @@
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import static java.lang.Long.parseLong;
 
 
 public class Main {
@@ -11,46 +14,6 @@ public class Main {
         char chose = ' ';
         Magazyn magazyn = new Magazyn();
 
-        do {
-            System.out.println("Witaj w programie przyjmującym i realizującym zamówienia.");
-            System.out.println("Wybierz opcję podgając cyfre znajdującą się przy wybranej opcji.");
-            System.out.println("1. Dodaj zamówienie.");
-            System.out.println("2. Dodaj dostawę (odbierz dostawę).");
-            System.out.println("3. Listuj aktualne zamówienia.");
-            System.out.println("4. Listuj dostarczone zamowienia.");
-            System.out.println("5. Zapisz (informację o stanach magazynowych, zamówieniach, produktach).");
-            System.out.println("6. Wczytaj (zapisane informację o stanach magazynowych, zamówieniach, produktach).");
-            System.out.println("7. Sprzedaż.");
-            System.out.println("8. Wyjście.");
-            chose = scanner.nextLine().charAt(0);
-            switch (chose) {
-                case '1': //dodaj zmowienie
-                    break;
-                case '2': //dadaj doastawe
-                    System.out.println("Podaj numer dostawy (np. XY123).");
-                    String nrDostawy = scanner.nextLine();
-                    dodajDostawe(nrDostawy, magazyn);
-                    break;
-                case '3': // listuj aktualne zamowienia
-                    break;
-                case '4': // listuj dostarczone zamowienia
-                    break;
-                case '5': // zapisz do pliku
-                    break;
-                case '6': // wczytaj z pliku
-                    break;
-                case '7': //sprzedaz
-                    break;
-                case '8': //wyjscie
-                    System.out.println("Aplikajca została wyłączona.");
-                    break;
-                default:
-                    System.out.println("Nie ma takiej opcji. Wybierz ponownie.");
-                    break;
-            }
-        } while (chose != '8');
-
-        Magazyn magazynSklepu = new Magazyn();
         Zamowienie zamowienieTest = new Zamowienie();
         Zamowienie zamowienieTest2 = new Zamowienie();
 //PRZYKLADOWE PRODUKTY
@@ -70,17 +33,94 @@ public class Main {
         zamowienieTest2.setDataZamowienie(LocalDateTime.now());
         zamowienieTest2.setNumer("GD123");
 
-        magazynSklepu.getMapaZamowien().put("GD789", zamowienieTest);
-        magazynSklepu.getMapaZamowien().put("GD123", zamowienieTest2);
+        magazyn.getMapaZamowien().put("GD789", zamowienieTest);
+        magazyn.getMapaZamowien().put("GD123", zamowienieTest2);
+
+
+        do {
+            System.out.println("Witaj w programie przyjmującym i realizującym zamówienia.");
+            System.out.println("Wybierz opcję podgając cyfre znajdującą się przy wybranej opcji.");
+            System.out.println("1. Dodaj zamówienie.");
+            System.out.println("2. Dodaj dostawę (odbierz dostawę).");
+            System.out.println("3. Wypisz zawartość magazynu w sklepie.");
+            System.out.println("4. Listuj aktualne zamówienia.");
+            System.out.println("5. Listuj dostarczone zamowienia.");
+            System.out.println("6. Zapisz (informację o stanach magazynowych, zamówieniach, produktach).");
+            System.out.println("7. Wczytaj (zapisane informację o stanach magazynowych, zamówieniach, produktach).");
+            System.out.println("8. Sprzedaż.");
+            System.out.println("9. Wyjście.");
+            chose = scanner.nextLine().charAt(0);
+            switch (chose) {
+                case '1': //dodaj zmowienie
+                    break;
+                case '2': //dadaj doastawe
+                    System.out.println("Podaj numer dostawy (np. XY123).");
+                    String nrDostawy = scanner.nextLine();
+                    dodajDostawe(nrDostawy, magazyn);
+                    break;
+                case '3': // wypisz zawartosc magazynu
+                    wypiszZawartoscMagazynuSklepu(magazyn);
+                    czekajNaKlikniecie(scanner);
+                    break;
+                case '4': // listuj aktualne zamowienia (te niedostarczone)
+                    wypiszAktualneZamowienia(magazyn);
+                    czekajNaKlikniecie(scanner);
+                    break;
+                case '5': // listuj dostarczone zamowienia
+                    wypiszZrealizowaneZamowienia(magazyn);
+                    czekajNaKlikniecie(scanner);
+                    break;
+                case '6': // zapisz do pliku
+                    break;
+                case '7': // wczytaj z pliku
+                    break;
+                case '8': //sprzedaz
+                    break;
+                case '9': //wyjscie
+                    System.out.println("Aplikajca została wyłączona.");
+                    break;
+                default:
+                    System.out.println("Nie ma takiej opcji. Wybierz ponownie.");
+                    break;
+            }
+        } while (chose != '9');
+
+
     }
 
-    public static void wypiszZawartoscDostawy(Magazyn magazynSklepu) {
-        System.out.println("Stan magazynu w sklepie");
 
-        System.out.println(magazynSklepu.getListaProduktowWMagazynie());
-//        for (Map.Entry<String, Integer> produkt : magazynSklepu.getListaProduktowWMagazynie().entrySet()) {
-//            System.out.println("Produkt: " + produkt.getKey() + " Liczba: " + produkt.getValue());
-//        }
+    public static void wypiszZawartoscMagazynuSklepu(Magazyn magazynSklepu) {
+        System.out.println("Stan magazynu w sklepie\n");
+        if (magazynSklepu.getListaProduktowWMagazynie().isEmpty()) {
+            System.out.println("Magazyn jest pusty.\n");
+        } else {
+            for (Map.Entry<String, Integer> produkt : magazynSklepu.getListaProduktowWMagazynie().entrySet()) {
+                System.out.println("Produkt: " + produkt.getKey() + " Liczba: " + produkt.getValue());
+                System.out.println("");
+            }
+        }
+    }
+
+    public static void wypiszAktualneZamowienia(Magazyn magazynSklepu) {
+        System.out.println("Zamówienia pozostające w realizacji:");
+        for (Map.Entry<String, Zamowienie> mapaZamowien : magazynSklepu.getMapaZamowien().entrySet()) {
+            if (!mapaZamowien.getValue().isCzyDostarczone()) {
+                System.out.println("Nr zamowienie " + mapaZamowien.getValue().getNumer()
+                        + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
+                        + "\nlista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + ".\n");
+            }
+        }
+    }
+
+    public static void wypiszZrealizowaneZamowienia(Magazyn magazynSklepu) {
+        System.out.println("Zamówienia  zrealizowane:");
+        for (Map.Entry<String, Zamowienie> mapaZamowien : magazynSklepu.getMapaZamowien().entrySet()) {
+            if (mapaZamowien.getValue().isCzyDostarczone() == true) {
+                System.out.println("Nr zamowienie " + mapaZamowien.getValue().getNumer()
+                        + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
+                        + "\nlista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + ".\n");
+            }
+        }
     }
 
     public static void dodajDostawe(String nrDostawy, Magazyn magazynSklepu) {
@@ -156,7 +196,7 @@ public class Main {
 
     private static void wpiszNrFaktury(Scanner scanner, Zamowienie zamowienie) {
         System.out.println("Zamowienie zrealizowane. Podaj numer faktury: ");
-        Long numerFaktury = scanner.nextLong();
+        Long numerFaktury = parseLong(scanner.nextLine());
         zamowienie.ustawyNrFaktury(numerFaktury);
     }
 
@@ -172,7 +212,7 @@ public class Main {
 
         } else {
 
-            System.out.println("Zamowienie dostarczono w ciągu " + duration.getSeconds() + ". " + "Wymagany czas dostawy to 1 min");
+            System.out.println("Zamowienie dostarczono w ciągu " + duration.getSeconds() + " s. " + "Wymagany czas dostawy to 1 min\n");
         }
     }
 
@@ -200,4 +240,8 @@ public class Main {
         return takNie;
     }
 
+    private static void czekajNaKlikniecie(Scanner scanner) {
+        System.out.println("Kliknij Enter aby przejść dalej.");
+        scanner.nextLine();
+    }
 }
