@@ -84,10 +84,7 @@ public class Main {
                     break;
             }
         } while (chose != '9');
-
-
     }
-
 
     public static void wypiszZawartoscMagazynuSklepu(Magazyn magazynSklepu) {
         System.out.println("Stan magazynu w sklepie\n");
@@ -108,7 +105,10 @@ public class Main {
                 System.out.println("Nr zamowienie " + mapaZamowien.getValue().getNumer()
                         + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
                         + "\nlista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + ".\n");
+            } else {
+                System.out.println("Zamowienie zostało zrealizowane");
             }
+
         }
     }
 
@@ -126,7 +126,7 @@ public class Main {
     public static void dodajDostawe(String nrDostawy, Magazyn magazynSklepu) {
         Scanner scanner = new Scanner(System.in);
 
-        String takNie;
+        String chose = "";
 
         Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get(nrDostawy);
         if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && zamowienie.isCzyDostarczone() == false) {
@@ -137,21 +137,24 @@ public class Main {
             for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
                 System.out.println("Czy w dostawie znajduje się produkt: " + produkt.getNazwa() + ", cena " + produkt.getCena()
                         + ", ilość " + produkt.getIlosc() + "? tak/nie");
-
                 do {
-                    takNie = takLubNie(scanner);
-                    //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
-                    if (takNie.equalsIgnoreCase("tak")) {
-                        produkt.dostarczono();
-                        magazynSklepu.zwiekszLiczbeWMagazynie(produkt);
+                    chose = takLubNie(scanner);
+//                    chose = scanner.nextLine();
+                    switch (chose) {
+                        //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
+                        case "tak":
+                            produkt.dostarczono();
+                            magazynSklepu.zwiekszLiczbeWMagazynie(produkt);
+                            continue;
+                        case "nie":
+                            //jesli w zamowieniu nie ma produktu zamowionego to oznaczamy jako niedostarczony
+                            produkt.nieDostarczono();
+                            break;
+                        default:
+                            System.out.println("Wpisz \"tak\" lub \"nie\".");
+                            break;
                     }
-                    //jesli w zamowieniu nie ma produktu zamowionego to oznaczamy jako niedostarczony
-                    else if (takNie.equalsIgnoreCase("nie")) {
-                        produkt.nieDostarczono();
-                    } else {
-                        System.out.println("Wpisz \"tak\" lub \"nie\"");
-                    }
-                } while (takNie == "tak" || takNie == "nie");
+                } while /*(chose != "tak");*/  (chose != "tak" || chose != "nie");
             }
 
 //DODANIE NR FAKTURY DO ZAMOWNIE
