@@ -13,7 +13,7 @@ public class Main {
 
         do {
             System.out.println("Witaj w programie przyjmującym i realizującym zamówienia.");
-            System.out.println("Wybierz opcję podając cyfre znajdującą się przy wybranej opcji.");
+            System.out.println("Wybierz opcję podgając cyfre znajdującą się przy wybranej opcji.");
             System.out.println("1. Dodaj zamówienie.");
             System.out.println("2. Dodaj dostawę (odbierz dostawę).");
             System.out.println("3. Listuj aktualne zamówienia.");
