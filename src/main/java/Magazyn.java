@@ -2,10 +2,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Data
 @AllArgsConstructor
@@ -23,20 +26,19 @@ public class Magazyn {
             if (!listaProduktowWMagazynie.containsKey(produkt.getNazwa())) {
 
                 listaProduktowWMagazynie.put(produkt.getNazwa(), produkt.getIlosc());
+
             } else if (listaProduktowWMagazynie.containsKey(produkt.getNazwa())) {
                 //jesli produnkt o podanej nazwie znajduje sie w juz w magazynie to nalezy do jego obecnej ilosci dodac ta z podanego produktu.
 
-                int liczbaProduktow = listaProduktowWMagazynie.get(listaProduktowWMagazynie.values()) + produkt.getIlosc();
+                int iloscProduktu = listaProduktowWMagazynie.entrySet()
+                        .stream()
+                        .filter(key -> key.getKey().equalsIgnoreCase(produkt.getNazwa()))
+                        .mapToInt(value -> value.getValue().intValue() + produkt.getIlosc())
+                        .sum();
 
-                listaProduktowWMagazynie.put(produkt.getNazwa(),liczbaProduktow);
-//                    listaProduktowWMagazynie.entrySet().stream()
-//                            .filter(p -> p.getKey().equalsIgnoreCase(produkt.getNazwa()))
-//                            .forEach(pr -> {
-//                                pr.setValue(pr.getValue() + produkt.getIlosc());
-//                            });
+                listaProduktowWMagazynie.replace(produkt.getNazwa(),produkt.getIlosc(),iloscProduktu);
+
             }
         }
-
-
     }
 }

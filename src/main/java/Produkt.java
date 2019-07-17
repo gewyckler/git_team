@@ -16,4 +16,12 @@ public class Produkt {
         this.cena = cena;
         this.ilosc = ilosc;
     }
+
+    public void dostarczono() {
+        setCzyDostarczono(true);
+    }
+
+    public void nieDostarczono() {
+        setCzyDostarczono(false);
+    }
 }

@@ -3,11 +3,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
+import java.util.Scanner;
 
 @Data
 @AllArgsConstructor
@@ -20,5 +18,13 @@ public class Zamowienie {
     private String numer;
     private Long numerFaktury;
     private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
+    private boolean czyDostarczone = false;
 
+    public void dostarczono() {
+        setCzyDostarczone(true);
+    }
+
+    public void ustawyNrFaktury(Long nrFaktury) {
+        setNumerFaktury(nrFaktury);
+    }
 }
