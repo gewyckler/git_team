@@ -36,8 +36,44 @@ public class Magazyn {
                         .mapToInt(value -> value.getValue().intValue() + produkt.getIlosc())
                         .sum();
 
-                listaProduktowWMagazynie.replace(produkt.getNazwa(),produkt.getIlosc(),iloscProduktu);
+                listaProduktowWMagazynie.replace(produkt.getNazwa(), produkt.getIlosc(), iloscProduktu);
 
+            }
+        }
+    }
+
+    public void wypiszZawartoscMagazynuSklepu() {
+        System.out.println("Stan magazynu w sklepie\n");
+        if (listaProduktowWMagazynie.isEmpty()) {
+            System.out.println("Magazyn jest pusty.\n");
+        } else {
+            for (Map.Entry<String, Integer> produkt : listaProduktowWMagazynie.entrySet()) {
+                System.out.println("Produkt: " + produkt.getKey() + " Liczba: " + produkt.getValue());
+                System.out.println("");
+            }
+        }
+    }
+
+    public void wypiszAktualneZamowienia() {
+        System.out.println("Zamówienia pozostające w realizacji:");
+        for (Map.Entry<String, Zamowienie> mapaZamowien : mapaZamowien.entrySet()) {
+            if (!mapaZamowien.getValue().isCzyDostarczoneZamowienie()) {
+                System.out.println("\nNr zamowienie " + mapaZamowien.getValue().getNumer()
+                        + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
+                        + "\nlista produktów zamawiana " + mapaZamowien.getValue().getListaProduktowZamawiana() + ".");
+            } else {
+//                System.out.println("Zamowienie zostało już zrealizowane");
+            }
+        }
+    }
+
+    public void wypiszZrealizowaneZamowienia() {
+        System.out.println("Zamówienia  zrealizowane:");
+        for (Map.Entry<String, Zamowienie> mapaZamowien : mapaZamowien.entrySet()) {
+            if (mapaZamowien.getValue().isCzyDostarczoneZamowienie() == true) {
+                System.out.println("\nNr zamowienie " + mapaZamowien.getValue().getNumer()
+                        + "\nData zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
+                        + "\nLista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + ".");
             }
         }
     }

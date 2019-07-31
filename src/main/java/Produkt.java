@@ -24,4 +24,12 @@ public class Produkt {
     public void nieDostarczono() {
         setCzyDostarczono(false);
     }
+
+    @Override
+    public String toString() {
+        return "\nNazwa: " + nazwa +
+                "\nCena: " + cena +
+                "\nIlosc: " + ilosc +
+                "\nCzyDostarczono: " + czyDostarczono;
+    }
 }

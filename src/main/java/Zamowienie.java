@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 @Data
 @AllArgsConstructor
@@ -18,13 +17,26 @@ public class Zamowienie {
     private String numer;
     private Long numerFaktury;
     private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
-    private boolean czyDostarczone = false;
+    private boolean czyDostarczoneZamowienie = false;
 
     public void dostarczono() {
-        setCzyDostarczone(true);
+        setCzyDostarczoneZamowienie(true);
     }
 
     public void ustawyNrFaktury(Long nrFaktury) {
         setNumerFaktury(nrFaktury);
+    }
+
+
+
+
+    @Override
+    public String toString() {
+        return "\nNumer: " + numer +
+                "\nDataZamowienie: " + dataZamowienie +
+                "\nDataDostarczenia: " + dataDostarczenia +
+                "\nNumerFaktury: " + numerFaktury +
+                "\nListaProduktowZamawiana: " + listaProduktowZamawiana +
+                "\nCzyDostarczone: " + czyDostarczoneZamowienie;
     }
 }
