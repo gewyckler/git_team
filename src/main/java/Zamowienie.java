@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -27,16 +28,19 @@ public class Zamowienie {
         setNumerFaktury(nrFaktury);
     }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataZamowienie, dataDostarczenia, numer, numerFaktury, listaProduktowZamawiana, czyDostarczoneZamowienie);
+    }
 
     @Override
     public String toString() {
-        return "\nNumer: " + numer +
-                "\nDataZamowienie: " + dataZamowienie +
-                "\nDataDostarczenia: " + dataDostarczenia +
-                "\nNumerFaktury: " + numerFaktury +
-                "\nListaProduktowZamawiana: " + listaProduktowZamawiana +
-                "\nCzyDostarczone: " + czyDostarczoneZamowienie;
+        return "#%%#" + numer +
+                "#%%#" + dataZamowienie +
+                "#%%#" + dataDostarczenia +
+                "#%%#" + numerFaktury +
+                "#%%#" + czyDostarczoneZamowienie +
+                "#%%#" + listaProduktowZamawiana.values();
     }
+
 }

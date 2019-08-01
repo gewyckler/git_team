@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class Produkt {
     private String nazwa;
     private double cena;
@@ -27,9 +27,6 @@ public class Produkt {
 
     @Override
     public String toString() {
-        return "\nNazwa: " + nazwa +
-                "\nCena: " + cena +
-                "\nIlosc: " + ilosc +
-                "\nCzyDostarczono: " + czyDostarczono;
+        return "@##@" + nazwa + "@##@" + cena + "@##@" + ilosc + "@##@" + czyDostarczono + "@##@";
     }
 }

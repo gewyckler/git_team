@@ -5,6 +5,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ContentLoader contentLoader = new ContentLoader();
+        File file = new File();
 
         char chose = ' ';
         Magazyn magazyn = new Magazyn();
@@ -67,10 +68,10 @@ public class Main {
                     contentLoader.czekajNaKlikniecie();
                     break;
                 case '6': // zapisz do pliku
-                    contentLoader.zapiszDoPliku(magazyn);
+                    file.zapiszDoPliku(magazyn);
                     break;
                 case '7': // wczytaj z pliku
-                    contentLoader.wczytajZPliku();
+                    file.wczytajZPliku(magazyn);
                     contentLoader.czekajNaKlikniecie();
                     break;
                 case '8': //sprzedaz
@@ -83,6 +84,10 @@ public class Main {
                     break;
             }
         } while (chose != '9');
+    }
+
+    public static void sprzedaj() {
+        System.out.println();
     }
 
 
