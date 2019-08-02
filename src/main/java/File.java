@@ -13,7 +13,6 @@ public class File {
 
             PrintWriter printWriter = new PrintWriter(new FileWriter(PATH, true));
             for (Zamowienie zamowienie : magazyn.getMapaZamowien().values()) {
-
                 if (!listNr.contains(zamowienie.getNumer() + zamowienie.isCzyDostarczoneZamowienie())) {
 
                     printWriter.print(zamowienie.getNumer() + "#%%#" + zamowienie.getDataZamowienie() + "#%%#"
@@ -23,8 +22,9 @@ public class File {
                         printWriter.print(produkt.getNazwa() + "#%%#" + produkt.getCena() + "#%%#" + produkt.getIlosc() + "#%%#" + produkt.isCzyDostarczono() + "#%%#");
                     }
                     printWriter.println("");
+                    listNr.add(zamowienie.getNumer() + zamowienie.isCzyDostarczoneZamowienie());
                 }
-                magazyn.getMapaZamowien().replace(zamowienie.getNumer(), magazyn.getMapaZamowien().get(listNr.get(0)), zamowienie);
+                magazyn.getMapaZamowien().put(zamowienie.getNumer(), zamowienie);
             }
             printWriter.close();
         } catch (IOException e) {
@@ -53,9 +53,9 @@ public class File {
     public void wczytajZPliku(Magazyn magazyn) {
         try {
 
-            for (Map.Entry<String, Zamowienie> zamowienie : magazyn.getMapaZamowien().entrySet()) {
-                magazyn.getMapaZamowien().remove(zamowienie.getKey());
-            }
+//            for (Map.Entry<String, Zamowienie> zamowienie : magazyn.getMapaZamowien().entrySet()) {
+//                magazyn.getMapaZamowien().remove(zamowienie.getKey());
+//            }
 
             // Tworzenie zamówienia z danymi wczytanymi z pliku.
             Zamowienie zamowienie = new Zamowienie();

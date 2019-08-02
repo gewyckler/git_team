@@ -61,8 +61,6 @@ public class Magazyn {
                 System.out.println("\nNr zamowienie " + mapaZamowien.getValue().getNumer()
                         + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
                         + "\nlista produktów zamawiana " + mapaZamowien.getValue().getListaProduktowZamawiana() + ".");
-            } else {
-//                System.out.println("Zamowienie zostało już zrealizowane");
             }
         }
     }
