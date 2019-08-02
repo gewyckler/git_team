@@ -68,6 +68,7 @@ public class Main {
                     contentLoader.czekajNaKlikniecie();
                     break;
                 case '6': // zapisz do pliku
+                    file.updateFile(magazyn);
                     file.zapiszDoPliku(magazyn);
                     break;
                 case '7': // wczytaj z pliku

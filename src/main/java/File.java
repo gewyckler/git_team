@@ -50,12 +50,18 @@ public class File {
         return listaNr;
     }
 
+    public void updateFile(Magazyn magazyn) {
+        System.out.println(magazyn.toString());
+        for (Map.Entry<String, Zamowienie> maps : magazyn.getMapaZamowien().entrySet()) {
+            Zamowienie zamowienie = maps.getValue();
+            if (magazyn.getMapaZamowien().containsKey(zamowienie.getNumer())) {
+                magazyn.getMapaZamowien().replace(zamowienie.getNumer(), zamowienie);
+            }
+        }
+    }
+
     public void wczytajZPliku(Magazyn magazyn) {
         try {
-
-//            for (Map.Entry<String, Zamowienie> zamowienie : magazyn.getMapaZamowien().entrySet()) {
-//                magazyn.getMapaZamowien().remove(zamowienie.getKey());
-//            }
 
             // Tworzenie zamówienia z danymi wczytanymi z pliku.
             Zamowienie zamowienie = new Zamowienie();
