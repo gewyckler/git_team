@@ -31,7 +31,10 @@ public class Main {
 
         magazyn.getMapaZamowien().put("GD789", zamowienieTest);
         magazyn.getMapaZamowien().put("GD123", zamowienieTest2);
-
+/*
+    Od linijki 11 do linijki 33 stworzone są dwa przykładowe zamówienia na potrzeby testwania aplikacji.
+    Z racji że na składanie zamówień nie dostałem jeszcze pull requesta na gicie (mam nadzieje ze dobrze pamietałem nazwe).
+ */
 
         do {
             System.out.println("Witaj w programie przyjmującym i realizującym zamówienia.");
