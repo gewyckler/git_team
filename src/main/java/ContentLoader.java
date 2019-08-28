@@ -8,15 +8,13 @@ import java.util.Scanner;
 import static java.lang.Long.parseLong;
 
 public class ContentLoader {
-    private Scanner scanner = new Scanner(System.in);
 
     public void dodajDostawe(String nrDostawy, Magazyn magazynSklepu) {
         Scanner scanner = new Scanner(System.in);
 
-        String chose = null;
-
+        String chose;
         Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get(nrDostawy);
-        if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && zamowienie.isCzyDostarczoneZamowienie() == false) {
+        if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && !zamowienie.isCzyDostarczoneZamowienie()) {
             System.out.println("Zamówienie zawiera " + zamowienie.getListaProduktowZamawiana().keySet().stream().count() + " produkty.");
             for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
                 System.out.println(produkt.getNazwa() + " w ilości: " + produkt.getIlosc());
@@ -109,7 +107,7 @@ public class ContentLoader {
         if (duration.getSeconds() > 60L) {
 
             long roznica = duration.getSeconds() - 60L;
-            System.out.println("Zamowienie spoznilo sie o " + roznica);
+            System.out.println("Zamowienie dostarczono w ciągu: " + duration.getSeconds() + "\nZamowienie spoznilo sie o " + roznica);
 
         } else {
 

@@ -9,20 +9,19 @@ public class File {
 
     public void zapiszDoPliku(Magazyn magazyn) {
         try {
-            List<String> listNr = checkIfFileContainsOrder();
-
-            PrintWriter printWriter = new PrintWriter(new FileWriter(PATH, true));
+            PrintWriter printWriter = new PrintWriter(new FileWriter(PATH, false));
             for (Zamowienie zamowienie : magazyn.getMapaZamowien().values()) {
-                if (!listNr.contains(zamowienie.getNumer() + zamowienie.isCzyDostarczoneZamowienie())) {
+                if (magazyn.getMapaZamowien().containsKey(zamowienie.getNumer())) {
 
                     printWriter.print(zamowienie.getNumer() + "#%%#" + zamowienie.getDataZamowienie() + "#%%#"
-                            + zamowienie.getDataDostarczenia() + "#%%#" + zamowienie.getNumerFaktury() + "#%%#" + zamowienie.isCzyDostarczoneZamowienie() + "#%%#");
+                            + zamowienie.getDataDostarczenia() + "#%%#" + zamowienie.getNumerFaktury() + "#%%#" +
+                            zamowienie.isCzyDostarczoneZamowienie() + "#%%#");
 
                     for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
-                        printWriter.print(produkt.getNazwa() + "#%%#" + produkt.getCena() + "#%%#" + produkt.getIlosc() + "#%%#" + produkt.isCzyDostarczono() + "#%%#");
+                        printWriter.print(produkt.getNazwa() + "#%%#" + produkt.getCena() + "#%%#" + produkt.getIlosc()
+                                + "#%%#" + produkt.isCzyDostarczono() + "#%%#");
                     }
                     printWriter.println("");
-                    listNr.add(zamowienie.getNumer() + zamowienie.isCzyDostarczoneZamowienie());
                 }
                 magazyn.getMapaZamowien().put(zamowienie.getNumer(), zamowienie);
             }
@@ -32,47 +31,18 @@ public class File {
         }
     }
 
-    private List<String> checkIfFileContainsOrder() {
-        List<String> listaNr = new ArrayList<>();
-        try {
-            scanner = new Scanner(new FileReader(PATH));
-            String nrZam;
-            while (scanner.hasNextLine()) {
-
-                String tab[] = scanner.nextLine().split("#%%#");
-                nrZam = tab[0] + tab[4];
-                listaNr.add(nrZam);
-
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return listaNr;
-    }
-
-    public void updateFile(Magazyn magazyn) {
-        System.out.println(magazyn.toString());
-        for (Map.Entry<String, Zamowienie> maps : magazyn.getMapaZamowien().entrySet()) {
-            Zamowienie zamowienie = maps.getValue();
-            if (magazyn.getMapaZamowien().containsKey(zamowienie.getNumer())) {
-                magazyn.getMapaZamowien().replace(zamowienie.getNumer(), zamowienie);
-            }
-        }
-    }
 
     public void wczytajZPliku(Magazyn magazyn) {
         try {
-
-            // Tworzenie zamówienia z danymi wczytanymi z pliku.
-            Zamowienie zamowienie = new Zamowienie();
-
-            // Tworzenie mapy listy produktów znajdujących się w pojedynczym zamówieniu.
-            Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
 
             scanner = new Scanner(new FileReader(PATH));
             scanner.useDelimiter("#%%#");
 
             while (scanner.hasNextLine()) {
+
+                // Tworzenie zamówienia z danymi wczytanymi z pliku.
+                Zamowienie zamowienie = new Zamowienie();
+
                 String line = scanner.nextLine();
                 String[] dane = line.split("#%%#");
                 // Zebranie danych z pliku o zamówieniu
@@ -94,6 +64,9 @@ public class File {
                 }
                 zamowienie.setCzyDostarczoneZamowienie(Boolean.parseBoolean(dane[4]));
 
+                // Tworzenie mapy listy produktów znajdujących się w pojedynczym zamówieniu.
+                Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
+
                 // Zebranie danych o produkcie znajdujacych się na liście produktów zamawianych
                 for (int i = 5; i < dane.length; i++) {
                     // Stworzenie z zebranych danych produktu
@@ -109,7 +82,11 @@ public class File {
 
                     // Dodanie produktu do mapy listy produktów zamawianych
                     listaProduktowZamawiana.put(produkt.getNazwa(), produkt);
+
+                    // Dodanie liczby produktów do magazyny w sklepie jesli zamowienie w ktorym sie znajduja jest dostarczone
+                    magazyn.zwiekszLiczbeWMagazynie(produkt);
                 }
+                zamowienie.setListaProduktowZamawiana(listaProduktowZamawiana);
 
                 // Dodanie zamówienia do mapy zamówień w magazynie
                 magazyn.getMapaZamowien().put(zamowienie.getNumer(), zamowienie);

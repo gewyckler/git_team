@@ -58,9 +58,10 @@ public class Magazyn {
         System.out.println("Zamówienia pozostające w realizacji:");
         for (Map.Entry<String, Zamowienie> mapaZamowien : mapaZamowien.entrySet()) {
             if (!mapaZamowien.getValue().isCzyDostarczoneZamowienie()) {
-                System.out.println("\nNr zamowienie " + mapaZamowien.getValue().getNumer()
-                        + "\ndata zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
-                        + "\nlista produktów zamawiana " + mapaZamowien.getValue().getListaProduktowZamawiana() + ".");
+                System.out.println("\nNr zamowienie: " + mapaZamowien.getValue().getNumer()
+                        + "\nData zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
+                        + "\nLista produktów zamawiana " + mapaZamowien.getValue().getListaProduktowZamawiana() + "."
+                        + "\nStatus: " + mapaZamowien.getValue().isCzyDostarczoneZamowienie());
             }
         }
     }
@@ -71,7 +72,8 @@ public class Magazyn {
             if (mapaZamowien.getValue().isCzyDostarczoneZamowienie() == true) {
                 System.out.println("\nNr zamowienie " + mapaZamowien.getValue().getNumer()
                         + "\nData zamówienia  " + mapaZamowien.getValue().getDataZamowienie()
-                        + "\nLista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + ".");
+                        + "\nLista produktów zamawiana" + mapaZamowien.getValue().getListaProduktowZamawiana() + "."
+                        + "\nStatus: " + mapaZamowien.getValue().isCzyDostarczoneZamowienie());
             }
         }
     }
