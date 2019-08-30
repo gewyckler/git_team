@@ -1,10 +1,7 @@
-import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -30,7 +27,7 @@ public class ContentLoader {
 
     private Zamowienie createZamowienie() {
         Zamowienie zamowienie = new Zamowienie();
-        zamowienie.setNumer(generujNrZamowienia() );
+        zamowienie.setNumer(generujNrZamowienia());
         zamowienie.setDataZamowienie(LocalDateTime.now());
         return zamowienie;
     }
@@ -101,7 +98,7 @@ public class ContentLoader {
 
                 String chose;
                 do {
-                    chose = takLubNie(scanner);
+                    chose = takLubNie();
                     switch (chose) {
                         //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
                         case "tak":
@@ -137,7 +134,7 @@ public class ContentLoader {
     private void ustawianieDaty(Zamowienie zamowienie) {
         //CZY CHCESZ WPISAC DATE ZAMOWIENIA RECZNIE
         System.out.println("Czy chcesz ustawić datę dostawy ręcznie? tak/nie");
-        String czyTak = takLubNie(scanner);
+        String czyTak = takLubNie();
         LocalDateTime czasOdUzytkownia;
         DateTimeFormatter formaterDaty = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
 
@@ -220,28 +217,62 @@ public class ContentLoader {
         return czasOdUzytkownika;
     }
 
-    private String takLubNie(Scanner scanner) {
+    private String takLubNie() {
         String takNie = scanner.nextLine();
         return takNie;
     }
 
-//    public String coSprzedac(Magazyn magazyn) {
-//
-//        try {
-//            System.out.println("Wpisz nazwę produktu który chce kupić klient:");
-//            String nazwaProduktu = scanner.nextLine();
-//            if (magazyn.getListaProduktowWMagazynie().containsKey(nazwaProduktu)) {
-//                int pozostalo = magazyn.getListaProduktowWMagazynie().entrySet()
-//                        .stream().filter(p -> p.getKey().equalsIgnoreCase(nazwaProduktu))
-//                        .mapToInt(value -> value.setValue(value.getValue() - 1))
-//                        .sum();
-//                System.out.println("pozostało" + pozostalo + " szt produktu.");
-//            }
-//        } catch (NullPointerException npe) {
-//            System.err.println("Nie ma takiego produktu w sklepie");
-//        }
-//
-//
-//    }
+    public void sprzedaz(Magazyn magazyn) {
+        String toDo;
+        do {
+            String nazwaProduktu = "nic";
+            int ilosc = 0;
+            try {
+                magazyn.wypiszZawartoscMagazynuSklepu();
+                nazwaProduktu = coUzytkownikChceKupic();
+                ilosc = ileUzytkownikChceKupic();
+                if (sprawdzMagazyn(magazyn, nazwaProduktu, ilosc)) {
+                    magazyn.zmniejszLiczbeWMagazynie(nazwaProduktu, ilosc);
+                    System.out.println("Sprzedano " + nazwaProduktu + ". Szt. " + ilosc + ".");
+                    System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu) + " szt. produktu w magazynie sklepu.");
+                } else {
+                    System.out.println("Sklep nie posiada tyle produktu: " + nazwaProduktu + ".");
+
+                }
+            } catch (NullPointerException e) {
+                System.err.println("Sklep nie posiada produktu o nazwie: " + nazwaProduktu);
+            }
+            System.out.println("Powtórzyć sprzedaż? tak/nie");
+            toDo = takLubNie();
+        } while (!toDo.equalsIgnoreCase("nie"));
+    }
+
+    private boolean sprawdzMagazyn(Magazyn magazyn, String nazwaProduktu, int ilosc) throws NullPointerException {
+        if (magazyn.getListaProduktowWMagazynie().containsKey(nazwaProduktu)) {
+            if (sprawdzCzyJestTyle(magazyn, ilosc, nazwaProduktu)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean sprawdzCzyJestTyle(Magazyn magazyn, int ilosc, String nazwa) {
+        int iloscWMagazynie = magazyn.liczbaDanegoProduktuWMagazynie(nazwa);
+        if (iloscWMagazynie >= ilosc) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String coUzytkownikChceKupic() {
+        System.out.println("Wpisz nazwę produktu który chce kupić klient:");
+        return scanner.nextLine();
+    }
+
+    private int ileUzytkownikChceKupic() {
+        System.out.println("Wpisz ile sztuk danego produktu chce kupić klient:");
+        return Integer.parseInt(scanner.nextLine());
+    }
 
 }

@@ -17,8 +17,8 @@ import java.util.stream.IntStream;
 
 public class Magazyn {
 
-    private Map <String, Integer> listaProduktowWMagazynie = new HashMap<>();
-    private Map <String,Zamowienie> mapaZamowien  = new HashMap<>();
+    private Map<String, Integer> listaProduktowWMagazynie = new HashMap<>();
+    private Map<String, Zamowienie> mapaZamowien = new HashMap<>();
 
     public void zwiekszLiczbeWMagazynie(Produkt produkt) {
 
@@ -42,6 +42,20 @@ public class Magazyn {
 
             }
         }
+    }
+
+    public void zmniejszLiczbeWMagazynie(String nazwaProduktu, int iloscKupna) {
+        getListaProduktowWMagazynie().entrySet()
+                .stream().filter(p -> p.getKey().equalsIgnoreCase(nazwaProduktu))
+                .mapToInt(value -> value.setValue(value.getValue() - iloscKupna))
+                .sum();
+    }
+
+    public int liczbaDanegoProduktuWMagazynie(String nazwaProduktu) {
+        return getListaProduktowWMagazynie().entrySet()
+                .stream().filter(p -> p.getKey().equalsIgnoreCase(nazwaProduktu))
+                .mapToInt(value -> value.setValue(value.getValue()))
+                .sum();
     }
 
     public void wypiszZawartoscMagazynuSklepu() {

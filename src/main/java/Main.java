@@ -46,6 +46,8 @@ public class Main {
                     contentLoader.czekajNaKlikniecie();
                     break;
                 case '6': //sprzedaz
+                    contentLoader.sprzedaz(magazyn);
+                    contentLoader.czekajNaKlikniecie();
                     break;
                 case '7': //wyjscie
                     file.zapiszDoPliku(magazyn);
@@ -55,6 +57,6 @@ public class Main {
                     System.out.println("Nie ma takiej opcji. Wybierz ponownie.");
                     break;
             }
-        } while (chose != '9');
+        } while (chose != '7');
     }
 }
