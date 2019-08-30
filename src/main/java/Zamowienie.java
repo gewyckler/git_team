@@ -29,11 +29,6 @@ public class Zamowienie {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(dataZamowienie, dataDostarczenia, numer, numerFaktury, listaProduktowZamawiana, czyDostarczoneZamowienie);
-    }
-
-    @Override
     public String toString() {
         return "#%%#" + numer +
                 "#%%#" + dataZamowienie +

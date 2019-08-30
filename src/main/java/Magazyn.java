@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 public class Magazyn {
 
     private Map <String, Integer> listaProduktowWMagazynie = new HashMap<>();
-    private Map <String,List <Zamowienie>> mapaZamowien  = new HashMap<>();
+    private Map <String,Zamowienie> mapaZamowien  = new HashMap<>();
 
     public void zwiekszLiczbeWMagazynie(Produkt produkt) {
 
