@@ -3,22 +3,45 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 public class Zamowienie {
-    //    private List <Produkt> listaProduktowZamawiana = new ArrayList<Produkt>();
-    private String dataZamowienie;
+
+    private LocalDateTime dataZamowienie;
+    private LocalDateTime dataDostarczenia;
     private String numer;
-    private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
-    private String dataDostarczenia;
     private Long numerFaktury;
+    private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
+    private boolean czyDostarczoneZamowienie = false;
+
+    public void dostarczono() {
+        setCzyDostarczoneZamowienie(true);
+    }
+
+    public void ustawyNrFaktury(Long nrFaktury) {
+        setNumerFaktury(nrFaktury);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataZamowienie, dataDostarczenia, numer, numerFaktury, listaProduktowZamawiana, czyDostarczoneZamowienie);
+    }
+
+    @Override
+    public String toString() {
+        return "#%%#" + numer +
+                "#%%#" + dataZamowienie +
+                "#%%#" + dataDostarczenia +
+                "#%%#" + numerFaktury +
+                "#%%#" + czyDostarczoneZamowienie +
+                "#%%#" + listaProduktowZamawiana.values();
+    }
+
 }
 
