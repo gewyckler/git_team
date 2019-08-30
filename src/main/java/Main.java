@@ -2,7 +2,58 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
+  
+    public static String nrZamowienia ( int dlugoscKoduZamowienia)
+    {
+        char[] generator = new char[6];
+        for (int i = 0; i < dlugoscKoduZamowienia; i++) {
+
+            generator[i] = (char) (((int) (Math.random() * 16)) + (int) 'A');
+        return (new String(generator, 0, dlugoscKoduZamowienia));
+          
+        }
+
+        
+      public static void main(String[] args) {
+      
+       // Produkt zamawiany = new Zamowienie();
+        // Produkt chleb = Produkt("Chleb", 2.25, 8);
+
+
+        System.out.println("Podaj liczbe zamówień");
+        Scanner scanner3 = new Scanner(System.in);
+        int iloscProduktowNaZamowieniu = scanner3.nextInt();
+
+
+        for (int i = 0; i < iloscProduktowNaZamowieniu; i++) {
+
+            System.out.println("podaj nazwe produktu");
+            //Scanner scanner3 = new Scanner(System.in);
+            String nazwaProd = scanner3.next();
+
+            System.out.println("podaj cene produktu");
+            //  Scanner scanner4 = new Scanner(System.in);
+            Double cenaProduktu = scanner3.nextDouble();
+
+            System.out.println("Podaj ilosc zamawanych produktow");
+            //  Scanner scanner5 = new Scanner(System.in);
+            Integer iloscProduktow = scanner3.nextInt();
+
+            Produkt produktZeskanera = new Produkt(nazwaProd, cenaProduktu, iloscProduktow);
+
+
+            Map<String, Produkt> zamowienie = new HashMap();
+            zamowienie.put(nazwaProd, produktZeskanera);
+            // System.out.println(zamowienie);  - dodaje informaje jaka opcje wybralem
+
+
+
+        }
+      
+      
+           
+      
+      
         Scanner scanner = new Scanner(System.in);
         ContentLoader contentLoader = new ContentLoader();
         File file = new File();
@@ -49,6 +100,7 @@ public class Main {
                     zamowienieTest2.setDataZamowienie(LocalDateTime.now());
                     zamowienieTest2.setNumer("GD123");
 
+
                     magazyn.getMapaZamowien().put("GD789", zamowienieTest);
                     magazyn.getMapaZamowien().put("GD123", zamowienieTest2);
                     break;
@@ -88,10 +140,4 @@ public class Main {
             }
         } while (chose != '9');
     }
-
-    public static void sprzedaj() {
-        System.out.println();
-    }
-
-
 }

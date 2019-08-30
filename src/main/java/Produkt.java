@@ -3,7 +3,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+
 @NoArgsConstructor
 public class Produkt {
     private String nazwa;
@@ -25,8 +25,21 @@ public class Produkt {
         setCzyDostarczono(false);
     }
 
+    public Produkt(String nazwa, double cena, int ilosc) {
+        this.nazwa = nazwa;
+        this.cena = cena;
+        this.ilosc = ilosc;
+    }
+
     @Override
     public String toString() {
+        return "Produkt{" +
+                "nazwa='" + nazwa + '\'' +
+                ", cena=" + cena +
+                ", ilosc=" + ilosc +
+
+                '}';
+
         return "@##@" + nazwa + "@##@" + cena + "@##@" + ilosc + "@##@" + czyDostarczono + "@##@";
     }
 }
