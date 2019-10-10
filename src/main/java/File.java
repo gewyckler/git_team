@@ -85,7 +85,7 @@ public class File {
                 }
                 try {
                     zamowienie.setNumerFaktury(Long.parseLong(dane[3]));
-                } catch (NumberFormatException ime) {
+                } catch (NumberFormatException nfe) {
                     zamowienie.setNumerFaktury(null);
                 }
                 zamowienie.setCzyDostarczoneZamowienie(Boolean.parseBoolean(dane[4]));

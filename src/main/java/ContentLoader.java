@@ -11,10 +11,10 @@ public class ContentLoader {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public void zlozZamowienie(Magazyn magazyn) {
+    public void placeAnOrder(Magazyn magazyn) {
         Zamowienie zamowienie = createZamowienie();
         System.out.println("Podaj liczbe produktów w zamówieniu.");
-        int iloscProduktowNaZamowieniu = Integer.parseInt(scanner.nextLine());
+        int iloscProduktowNaZamowieniu = typeAmount();
 
         for (int i = 0; i < iloscProduktowNaZamowieniu; i++) {
             Produkt produkt = createProduct();
@@ -27,21 +27,33 @@ public class ContentLoader {
 
     private Zamowienie createZamowienie() {
         Zamowienie zamowienie = new Zamowienie();
-        zamowienie.setNumer(generujNrZamowienia());
+        zamowienie.setNumer(generateOrderNumber());
         zamowienie.setDataZamowienie(LocalDateTime.now());
         return zamowienie;
     }
 
     public Character menuChose() {
-        return scanner.nextLine().charAt(0);
+        Character menu = ' ';
+        do {
+            try {
+                menu = scanner.nextLine().charAt(0);
+            } catch (StringIndexOutOfBoundsException siobe) {
+                System.out.println("Prosze podać liczbe 1 - 7");
+            }
+        } while (!Character.isDigit(menu));
+        return menu;
     }
 
-    public String podajNrZamowienia() {
-        System.out.println("Podaj numer dostawy (np. XY123).");
-        return scanner.nextLine();
+    public String typeOrderNumber() {
+        String number = null;
+        do {
+            System.out.println("Podaj numer dostawy (np. XY123).");
+            number = scanner.nextLine();
+        } while (number.isEmpty());
+        return number;
     }
 
-    private String generujNrZamowienia() {
+    private String generateOrderNumber() {
         StringBuilder numer = new StringBuilder();
         Random rnd = new Random();
         char znak;
@@ -51,7 +63,7 @@ public class ContentLoader {
             numer.append(znak);
         }
         for (int i = 0; i < 3; i++) {
-            cyfra = (int) rnd.nextInt((0) + 9);
+            cyfra = rnd.nextInt((0) + 9);
             numer.append(cyfra);
         }
         return String.valueOf(numer);
@@ -59,32 +71,55 @@ public class ContentLoader {
 
     private Produkt createProduct() {
         System.out.println("Podaj nazwe produktu");
-        String nazwaProd = podajNazwe();
+        String nazwaProd = typeName();
 
         System.out.println("Podaj cene produktu");
-        Double cenaProduktu = podajCene();
+        Double cenaProduktu = typePrice();
 
         System.out.println("Podaj liczbe sztuk produktu");
-        Integer iloscProduktow = podajIlosc();
+        Integer iloscProduktow = typeAmount();
 
         // Stworzenie produktu na podstawie wpisanych wczesniej iinfromacji
         return new Produkt(nazwaProd, cenaProduktu, iloscProduktow);
     }
 
-    private Integer podajIlosc() {
-        return Integer.valueOf(scanner.nextLine());
+    private Integer typeAmount() {
+        Integer amount = null;
+        do {
+            try {
+                amount = Integer.valueOf(scanner.nextLine());
+            } catch (NumberFormatException nfe) {
+                System.out.println("Musisz podać liczbę.");
+            } catch (NullPointerException npe) {
+            }
+        } while (amount != null && amount <= 0);
+        return amount;
     }
 
-    private Double podajCene() {
-        return Double.parseDouble(scanner.nextLine());
+    private Double typePrice() {
+        Double price = null;
+        do {
+            try {
+                price = Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Musisz cene produktu.");
+            }
+        } while (price != null && price <= 0);
+        return price;
     }
 
-    private String podajNazwe() {
-        return scanner.nextLine();
+    private String typeName() {
+        String name = null;
+        do {
+            try {
+                name = scanner.nextLine();
+            } catch (NumberFormatException e) {
+            }
+        } while (name.isEmpty());
+        return name;
     }
 
-    public void dodajDostawe(String nrDostawy, Magazyn magazynSklepu) {
-
+    public void pickUpDelivery(String nrDostawy, Magazyn magazynSklepu) {
 
         Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get(nrDostawy);
         if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && !zamowienie.isCzyDostarczoneZamowienie()) {
@@ -93,12 +128,12 @@ public class ContentLoader {
                 System.out.println(produkt.getNazwa() + " w ilości: " + produkt.getIlosc());
             }
             for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
-                System.out.println("Czy w dostawie znajduje się produkt: " + produkt.getNazwa() + ", cena " + produkt.getCena()
-                        + ", ilość " + produkt.getIlosc() + "? tak/nie");
+                System.out.println("Czy w dostawie znajduje się produkt: " + produkt.getNazwa() + ", cena "
+                        + produkt.getCena() + ", ilość " + produkt.getIlosc() + "? tak/nie");
 
                 String chose;
                 do {
-                    chose = takLubNie();
+                    chose = yesOrNo();
                     switch (chose) {
                         //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
                         case "tak":
@@ -116,9 +151,9 @@ public class ContentLoader {
                 } while (!chose.equalsIgnoreCase("tak") && !chose.equalsIgnoreCase("nie"));
             }
 
-            wpiszNrFaktury(zamowienie);
-            ustawianieDaty(zamowienie);
-            zamowienie.dostarczono();
+            zamowienie.setNumerFaktury(typeInvoiceNumber());
+            dateSetter(zamowienie);
+            zamowienie.setCzyDostarczoneZamowienie(true);
 
         } else if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && zamowienie.isCzyDostarczoneZamowienie() == true) {
             System.out.println("Zamówienie o podanym numerze " + zamowienie.getNumer() + " zostało już zrealizowane.");
@@ -131,10 +166,10 @@ public class ContentLoader {
         }
     }
 
-    private void ustawianieDaty(Zamowienie zamowienie) {
+    private void dateSetter(Zamowienie zamowienie) {
         //CZY CHCESZ WPISAC DATE ZAMOWIENIA RECZNIE
         System.out.println("Czy chcesz ustawić datę dostawy ręcznie? tak/nie");
-        String czyTak = takLubNie();
+        String czyTak = yesOrNo();
         LocalDateTime czasOdUzytkownia;
         DateTimeFormatter formaterDaty = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy");
 
@@ -155,23 +190,23 @@ public class ContentLoader {
         // po zrealizowaniu zamowienia czyli dostarczeniu do sklepu zamowienie jest oznaczone jako dostarczone
     }
 
-    public void czekajNaKlikniecie() {
+    public void waitForUserClick() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Kliknij Enter aby przejść dalej...");
         scanner.nextLine();
     }
 
-    private void wpiszNrFaktury(Zamowienie zamowienie) {
+    private Long typeInvoiceNumber() {
         System.out.println("Zamowienie zrealizowane. Podaj numer faktury: ");
         Long numerFaktury = null;
         do {
             try {
                 numerFaktury = parseLong(scanner.nextLine());
-                zamowienie.ustawyNrFaktury(numerFaktury);
             } catch (NumberFormatException e) {
                 System.err.println("Podano zły format numeru. Tylko cyfry!");
             }
         } while (numerFaktury == null);
+        return numerFaktury;
     }
 
     private void checkIfOrderIsLateOrNot(Zamowienie zamowienie, LocalDateTime czasOdUzytkownika) {
@@ -217,50 +252,53 @@ public class ContentLoader {
         return czasOdUzytkownika;
     }
 
-    private String takLubNie() {
-        String takNie = scanner.nextLine();
-        return takNie;
+    private String yesOrNo() {
+        return scanner.nextLine();
     }
 
-    public void sprzedaz(Magazyn magazyn) {
+    public void sell(Magazyn magazyn) {
         String toDo;
         do {
             String nazwaProduktu = "nic";
             int ilosc = 0;
             try {
                 magazyn.wypiszZawartoscMagazynuSklepu();
-                nazwaProduktu = coUzytkownikChceKupic();
-                ilosc = ileUzytkownikChceKupic();
-                if (sprawdzMagazyn(magazyn, nazwaProduktu, ilosc)) {
-                    magazyn.zmniejszLiczbeWMagazynie(nazwaProduktu, ilosc);
-                    if (ilosc == 0) {
-                        magazyn.getListaProduktowWMagazynie().remove(nazwaProduktu);
-                    }
-                    System.out.println("Sprzedano " + nazwaProduktu + ". Szt. " + ilosc + ".");
-                    System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu)
-                            + " szt. produktu w magazynie sklepu.");
-                } else {
-                    System.out.println("Sklep nie posiada tyle produktu: " + nazwaProduktu + ".");
-
-                }
+                nazwaProduktu = whatClientWantToBuy();
+                ilosc = whatAmountClientIsBuying();
+                goToMagazineAnd(magazyn, nazwaProduktu, ilosc);
             } catch (NullPointerException e) {
                 System.err.println("Sklep nie posiada produktu o nazwie: " + nazwaProduktu);
             }
             System.out.println("Powtórzyć sprzedaż? tak/nie");
-            toDo = takLubNie();
+            toDo = yesOrNo();
         } while (!toDo.equalsIgnoreCase("nie"));
     }
 
-    private boolean sprawdzMagazyn(Magazyn magazyn, String nazwaProduktu, int ilosc) throws NullPointerException {
-        if (magazyn.getListaProduktowWMagazynie().containsKey(nazwaProduktu)) {
-            if (sprawdzCzyJestTyle(magazyn, ilosc, nazwaProduktu)) {
-                return true;
+    private void goToMagazineAnd(Magazyn magazyn, String nazwaProduktu, int ilosc) {
+        if (checkProductInMagazine(magazyn, nazwaProduktu, ilosc)) {
+            if (checkAmountInMagazine(magazyn, nazwaProduktu, ilosc)) {
+                magazyn.zmniejszLiczbeWMagazynie(nazwaProduktu, ilosc);
+                removeIfAmountIsZero(magazyn, nazwaProduktu, ilosc);
+                System.out.println("Sprzedano " + nazwaProduktu + ". Szt. " + ilosc + ".");
+                System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu)
+                        + " szt. produktu w magazynie sklepu.");
+            } else {
+                System.out.println("Sklep nie posiada takiej liczby produktu: " + nazwaProduktu);
             }
+        } else {
+            System.out.println("Sklep nie posiada produktu: " + nazwaProduktu + ".");
+
         }
-        return false;
     }
 
-    private boolean sprawdzCzyJestTyle(Magazyn magazyn, int ilosc, String nazwa) {
+    private void removeIfAmountIsZero(Magazyn magazyn, String name, int amount) {
+        if (amount == 0) {
+            magazyn.getListaProduktowWMagazynie().remove(name);
+        }
+
+    }
+
+    private boolean checkAmountInMagazine(Magazyn magazyn, String nazwa, int ilosc) {
         int iloscWMagazynie = magazyn.liczbaDanegoProduktuWMagazynie(nazwa);
         if (iloscWMagazynie >= ilosc) {
             return true;
@@ -269,12 +307,19 @@ public class ContentLoader {
         }
     }
 
-    private String coUzytkownikChceKupic() {
+    private boolean checkProductInMagazine(Magazyn magazyn, String nazwaProduktu, int ilosc) {
+        if (magazyn.getListaProduktowWMagazynie().containsKey(nazwaProduktu)) {
+            return true;
+        }
+        return false;
+    }
+
+    private String whatClientWantToBuy() {
         System.out.println("Wpisz nazwę produktu który chce kupić klient:");
         return scanner.nextLine();
     }
 
-    private int ileUzytkownikChceKupic() {
+    private int whatAmountClientIsBuying() {
         System.out.println("Wpisz ile sztuk danego produktu chce kupić klient:");
         return Integer.parseInt(scanner.nextLine());
     }

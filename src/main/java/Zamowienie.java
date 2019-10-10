@@ -20,14 +20,6 @@ public class Zamowienie {
     private Map<String, Produkt> listaProduktowZamawiana = new HashMap<>();
     private boolean czyDostarczoneZamowienie = false;
 
-    public void dostarczono() {
-        setCzyDostarczoneZamowienie(true);
-    }
-
-    public void ustawyNrFaktury(Long nrFaktury) {
-        setNumerFaktury(nrFaktury);
-    }
-
     @Override
     public String toString() {
         return "#%%#" + numer +

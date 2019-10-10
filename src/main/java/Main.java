@@ -8,11 +8,11 @@ public class Main {
         file.loadOrderFromFile(magazyn);
         file.loadMagazinFromFile(magazyn);
 
-        char chose;
+        char chose = '.';
         do {
             System.out.println("Witaj w programie przyjmującym i realizującym zamówienia.");
-            System.out.println("Wybierz opcję podgając cyfre znajdującą się przy wybranej opcji.");
-            System.out.println("Program automatycznie wczytuje stan magazynu i zamowień z pliku.");
+            System.out.println("Wybierz opcję wpisując cyfre od 1 - 7.");
+            System.out.println("Program automatycznie wczytuje stan magazynu i zamowień z pliku.\n");
             System.out.println("1. Dodaj zamówienie.");
             System.out.println("2. Dodaj dostawę (odbierz dostawę).");
             System.out.println("3. Wypisz zawartość magazynu w sklepie.");
@@ -24,29 +24,29 @@ public class Main {
             switch (chose) {
                 case '1': //dodaj zmowienie
 
-                    contentLoader.zlozZamowienie(magazyn);
-                    contentLoader.czekajNaKlikniecie();
+                    contentLoader.placeAnOrder(magazyn);
+                    contentLoader.waitForUserClick();
                     break;
                 case '2': //dadaj doastawe
-                    String nrDostawy = contentLoader.podajNrZamowienia();
-                    contentLoader.dodajDostawe(nrDostawy, magazyn);
-                    contentLoader.czekajNaKlikniecie();
+                    String nrDostawy = contentLoader.typeOrderNumber();
+                    contentLoader.pickUpDelivery(nrDostawy, magazyn);
+                    contentLoader.waitForUserClick();
                     break;
                 case '3': // wypisz zawartosc magazynu
                     magazyn.wypiszZawartoscMagazynuSklepu();
-                    contentLoader.czekajNaKlikniecie();
+                    contentLoader.waitForUserClick();
                     break;
                 case '4': // listuj aktualne zamowienia (te niedostarczone)
                     magazyn.wypiszAktualneZamowienia();
-                    contentLoader.czekajNaKlikniecie();
+                    contentLoader.waitForUserClick();
                     break;
                 case '5': // listuj dostarczone zamowienia
                     magazyn.wypiszZrealizowaneZamowienia();
-                    contentLoader.czekajNaKlikniecie();
+                    contentLoader.waitForUserClick();
                     break;
-                case '6': //sprzedaz
-                    contentLoader.sprzedaz(magazyn);
-                    contentLoader.czekajNaKlikniecie();
+                case '6': //sell
+                    contentLoader.sell(magazyn);
+                    contentLoader.waitForUserClick();
                     break;
                 case '7': //wyjscie
                     file.zapiszDoPliku(magazyn);
@@ -54,6 +54,7 @@ public class Main {
                     break;
                 default:
                     System.out.println("Nie ma takiej opcji. Wybierz ponownie.");
+                    contentLoader.waitForUserClick();
                     break;
             }
         } while (chose != '7');
