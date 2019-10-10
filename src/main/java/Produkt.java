@@ -8,20 +8,12 @@ public class Produkt {
     private String nazwa;
     private double cena;
     private int ilosc;
-    private boolean czyDostarczono;
+    private boolean czyDostarczono = false;
 
     public Produkt(String nazwa, double cena, int ilosc) {
         this.nazwa = nazwa;
         this.cena = cena;
         this.ilosc = ilosc;
-    }
-
-    public void dostarczono() {
-        setCzyDostarczono(true);
-    }
-
-    public void nieDostarczono() {
-        setCzyDostarczono(false);
     }
 
     @Override

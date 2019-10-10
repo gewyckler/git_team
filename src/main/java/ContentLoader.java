@@ -13,15 +13,15 @@ public class ContentLoader {
 
     public void placeAnOrder(Magazyn magazyn) {
         Zamowienie zamowienie = createZamowienie();
-        System.out.println("Podaj liczbe produktów w zamówieniu.");
-        int iloscProduktowNaZamowieniu = typeAmount();
-
-        for (int i = 0; i < iloscProduktowNaZamowieniu; i++) {
+        String doContinue = "";
+        do {
             Produkt produkt = createProduct();
-
             // Dodanie produktu listy produktów w zamówieniu
             zamowienie.getListaProduktowZamawiana().put(produkt.getNazwa(), produkt);
-        }
+            System.out.println("Dodać jeszcze jeden produkt? t/n");
+            doContinue = yesOrNo();
+        } while (!doContinue.equalsIgnoreCase("n"));
+
         magazyn.getMapaZamowien().put(zamowienie.getNumer(), zamowienie);
     }
 
@@ -73,7 +73,7 @@ public class ContentLoader {
         System.out.println("Podaj nazwe produktu");
         String nazwaProd = typeName();
 
-        System.out.println("Podaj cene produktu");
+        System.out.println("Podaj cene produktu np. 2.20");
         Double cenaProduktu = typePrice();
 
         System.out.println("Podaj liczbe sztuk produktu");
@@ -102,7 +102,8 @@ public class ContentLoader {
             try {
                 price = Double.parseDouble(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Musisz cene produktu.");
+                System.out.println("Musisz podać cene produktu. np.: 2.20");
+            } catch (NullPointerException npe) {
             }
         } while (price != null && price <= 0);
         return price;
@@ -124,32 +125,8 @@ public class ContentLoader {
         Zamowienie zamowienie = magazynSklepu.getMapaZamowien().get(nrDostawy);
         if (magazynSklepu.getMapaZamowien().containsKey(nrDostawy) && !zamowienie.isCzyDostarczoneZamowienie()) {
             System.out.println("Zamówienie zawiera " + zamowienie.getListaProduktowZamawiana().keySet().stream().count() + " produkty.");
-            for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
-                System.out.println(produkt.getNazwa() + " w ilości: " + produkt.getIlosc());
-            }
-            for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
-                System.out.println("Czy w dostawie znajduje się produkt: " + produkt.getNazwa() + ", cena "
-                        + produkt.getCena() + ", ilość " + produkt.getIlosc() + "? tak/nie");
-
-                String chose;
-                do {
-                    chose = yesOrNo();
-                    switch (chose) {
-                        //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
-                        case "tak":
-                            produkt.dostarczono();
-                            magazynSklepu.zwiekszLiczbeWMagazynie(produkt);
-                            break;
-                        case "nie":
-                            //jesli w zamowieniu nie ma produktu zamowionego to oznaczamy jako niedostarczony
-                            produkt.nieDostarczono();
-                            break;
-                        default:
-                            System.out.println("Wpisz \"tak\" lub \"nie\".");
-                            break;
-                    }
-                } while (!chose.equalsIgnoreCase("tak") && !chose.equalsIgnoreCase("nie"));
-            }
+            printProductsAndAmount(zamowienie);
+            checkIfOrderContainProduct(magazynSklepu, zamowienie);
 
             zamowienie.setNumerFaktury(typeInvoiceNumber());
             dateSetter(zamowienie);
@@ -163,6 +140,37 @@ public class ContentLoader {
 
         } else if (magazynSklepu.getMapaZamowien().isEmpty()) {
             System.out.println("Lista zamówień jest pusta.");
+        }
+    }
+
+    private void checkIfOrderContainProduct(Magazyn magazynSklepu, Zamowienie zamowienie) {
+        for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
+            System.out.println("Czy w dostawie znajduje się produkt: " + produkt.getNazwa() + ", cena "
+                    + produkt.getCena() + ", ilość " + produkt.getIlosc() + "? t/n");
+
+            String chose;
+            do {
+                chose = yesOrNo();
+                switch (chose) {
+                    //jesli w zamowieniu znajduje sie produkt to zwiększamy jego ilość w magazynie sklepu
+                    case "t":
+                        produkt.setCzyDostarczono(true);
+                        magazynSklepu.zwiekszLiczbeWMagazynie(produkt);
+                        break;
+                    case "n":
+                        //jesli w zamowieniu nie ma produktu zamowionego to oznaczamy jako niedostarczony
+                        break;
+                    default:
+                        System.out.println("Wpisz \"t\" lub \"n\".");
+                        break;
+                }
+            } while (!chose.equalsIgnoreCase("t") && !chose.equalsIgnoreCase("n"));
+        }
+    }
+
+    private void printProductsAndAmount(Zamowienie zamowienie) {
+        for (Produkt produkt : zamowienie.getListaProduktowZamawiana().values()) {
+            System.out.println(produkt.getNazwa() + " w ilości: " + produkt.getIlosc());
         }
     }
 
@@ -260,10 +268,12 @@ public class ContentLoader {
         String toDo;
         do {
             String nazwaProduktu = "nic";
-            int ilosc = 0;
+            int ilosc;
             try {
                 magazyn.wypiszZawartoscMagazynuSklepu();
+                System.out.println("Wpisz nazwę produktu który chce kupić klient:");
                 nazwaProduktu = whatClientWantToBuy();
+                System.out.println("Wpisz ile sztuk danego produktu chce kupić klient:");
                 ilosc = whatAmountClientIsBuying();
                 goToMagazineAnd(magazyn, nazwaProduktu, ilosc);
             } catch (NullPointerException e) {
@@ -278,7 +288,7 @@ public class ContentLoader {
         if (checkProductInMagazine(magazyn, nazwaProduktu, ilosc)) {
             if (checkAmountInMagazine(magazyn, nazwaProduktu, ilosc)) {
                 magazyn.zmniejszLiczbeWMagazynie(nazwaProduktu, ilosc);
-                removeIfAmountIsZero(magazyn, nazwaProduktu, ilosc);
+
                 System.out.println("Sprzedano " + nazwaProduktu + ". Szt. " + ilosc + ".");
                 System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu)
                         + " szt. produktu w magazynie sklepu.");
@@ -289,13 +299,7 @@ public class ContentLoader {
             System.out.println("Sklep nie posiada produktu: " + nazwaProduktu + ".");
 
         }
-    }
-
-    private void removeIfAmountIsZero(Magazyn magazyn, String name, int amount) {
-        if (amount == 0) {
-            magazyn.getListaProduktowWMagazynie().remove(name);
-        }
-
+//        removeIfAmountIsZero(magazyn);
     }
 
     private boolean checkAmountInMagazine(Magazyn magazyn, String nazwa, int ilosc) {
@@ -315,13 +319,19 @@ public class ContentLoader {
     }
 
     private String whatClientWantToBuy() {
-        System.out.println("Wpisz nazwę produktu który chce kupić klient:");
-        return scanner.nextLine();
+        String name = null;
+        do {
+            name = scanner.nextLine();
+        } while (name.isEmpty());
+        return name;
     }
 
     private int whatAmountClientIsBuying() {
-        System.out.println("Wpisz ile sztuk danego produktu chce kupić klient:");
-        return Integer.parseInt(scanner.nextLine());
+        Integer amount = null;
+        do {
+            amount = Integer.parseInt(scanner.nextLine());
+        } while (amount != null && amount < 0);
+        return amount;
     }
 
 }

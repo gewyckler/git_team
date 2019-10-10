@@ -32,8 +32,7 @@ public class Magazyn {
                         .filter(key -> key.getKey().equalsIgnoreCase(produkt.getNazwa()))
                         .mapToInt(value -> value.getValue().intValue() + produkt.getIlosc())
                         .sum();
-
-                listaProduktowWMagazynie.replace(produkt.getNazwa(), produkt.getIlosc(), iloscProduktu);
+                listaProduktowWMagazynie.put(produkt.getNazwa(), iloscProduktu);
             }
         }
     }
