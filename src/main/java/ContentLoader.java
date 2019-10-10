@@ -233,8 +233,12 @@ public class ContentLoader {
                 ilosc = ileUzytkownikChceKupic();
                 if (sprawdzMagazyn(magazyn, nazwaProduktu, ilosc)) {
                     magazyn.zmniejszLiczbeWMagazynie(nazwaProduktu, ilosc);
+                    if (ilosc == 0) {
+                        magazyn.getListaProduktowWMagazynie().remove(nazwaProduktu);
+                    }
                     System.out.println("Sprzedano " + nazwaProduktu + ". Szt. " + ilosc + ".");
-                    System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu) + " szt. produktu w magazynie sklepu.");
+                    System.out.println("Pozostało " + magazyn.getListaProduktowWMagazynie().get(nazwaProduktu)
+                            + " szt. produktu w magazynie sklepu.");
                 } else {
                     System.out.println("Sklep nie posiada tyle produktu: " + nazwaProduktu + ".");
 

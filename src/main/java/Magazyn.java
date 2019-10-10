@@ -2,18 +2,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 
 public class Magazyn {
 
@@ -30,7 +24,8 @@ public class Magazyn {
                 listaProduktowWMagazynie.put(produkt.getNazwa(), produkt.getIlosc());
 
             } else if (listaProduktowWMagazynie.containsKey(produkt.getNazwa())) {
-                //jesli produnkt o podanej nazwie znajduje sie w juz w magazynie to nalezy do jego obecnej ilosci dodac ta z podanego produktu.
+                //jesli produnkt o podanej nazwie znajduje sie w juz w magazynie to nalezy do
+                // jego obecnej ilosci dodac ta z podanego produktu.
 
                 int iloscProduktu = listaProduktowWMagazynie.entrySet()
                         .stream()
@@ -39,7 +34,6 @@ public class Magazyn {
                         .sum();
 
                 listaProduktowWMagazynie.replace(produkt.getNazwa(), produkt.getIlosc(), iloscProduktu);
-
             }
         }
     }

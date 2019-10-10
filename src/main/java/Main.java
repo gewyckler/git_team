@@ -1,13 +1,12 @@
-import java.util.*;
-
 public class Main {
-
 
     public static void main(String[] args) {
         ContentLoader contentLoader = new ContentLoader();
+
         File file = new File();
         Magazyn magazyn = new Magazyn();
-        file.wczytajZPliku(magazyn);
+        file.loadOrderFromFile(magazyn);
+        file.loadMagazinFromFile(magazyn);
 
         char chose;
         do {

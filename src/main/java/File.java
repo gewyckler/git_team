@@ -1,15 +1,42 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class File {
-    private String PATH = "stan_magazynu.txt";
+    private String ORDERPATH = "stan_zamowien.txt";
+    private String MAGAZINPATH = "stan_magazynu.txt";
     private Scanner scanner;
 
     public void zapiszDoPliku(Magazyn magazyn) {
+        saveOrderToFile(magazyn);
+        saveMagazinToFile(magazyn);
+    }
+
+    private void saveMagazinToFile(Magazyn magazyn) {
         try {
-            PrintWriter printWriter = new PrintWriter(new FileWriter(PATH, false));
+            PrintWriter printWriter = new PrintWriter(new FileWriter(MAGAZINPATH, false));
+            for (Map.Entry<String, Integer> produkt : magazyn.getListaProduktowWMagazynie().entrySet()) {
+                if (magazyn.getListaProduktowWMagazynie().containsKey(produkt.getKey())) {
+                    printWriter.print(produkt.getKey() + "#%%#" + produkt.getValue() + "#%%#");
+                    printWriter.println("");
+                }
+                magazyn.getListaProduktowWMagazynie().put(produkt.getKey(), produkt.getValue());
+
+            }
+            printWriter.close();
+
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveOrderToFile(Magazyn magazyn) {
+        try {
+            PrintWriter printWriter = new PrintWriter(new FileWriter(ORDERPATH, false));
             for (Zamowienie zamowienie : magazyn.getMapaZamowien().values()) {
                 if (magazyn.getMapaZamowien().containsKey(zamowienie.getNumer())) {
 
@@ -32,10 +59,9 @@ public class File {
     }
 
 
-    public void wczytajZPliku(Magazyn magazyn) {
+    public void loadOrderFromFile(Magazyn magazyn) {
         try {
-
-            scanner = new Scanner(new FileReader(PATH));
+            scanner = new Scanner(new FileReader(ORDERPATH));
             scanner.useDelimiter("#%%#");
 
             while (scanner.hasNextLine()) {
@@ -95,6 +121,23 @@ public class File {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadMagazinFromFile(Magazyn magazyn) {
+        try {
+            scanner = new Scanner(new FileReader(MAGAZINPATH));
+            scanner.useDelimiter("#%%#");
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] dane = line.split("#%%#");
+                String name = dane[0];
+                Integer amount = Integer.valueOf(dane[1]);
+                magazyn.getListaProduktowWMagazynie().put(name, amount);
+
+            }
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
